@@ -27,10 +27,27 @@ Crie os futuros fontes nos caminhos:
 
 As versões deverão aceitar como primeiro argumento o caminho do arquivo TXT, por exemplo `dados/pessoas.txt`. Esse contrato é do **projeto inicial**, não do enunciado do professor.
 
-O arquivo **não foi fornecido** no enunciado PDF. Quando você tiver a entrada real de 1000 pessoas, coloque-a em `dados/pessoas.txt` (uma linha: `estatura peso`, separados por espaço).
+O arquivo **não foi fornecido** no enunciado PDF. Por isso,
+`dados/pessoas.txt` contém 1000 registros **sintéticos e determinísticos**, que
+não devem ser confundidos com dados do professor ou dados de pessoas reais. O
+arquivo pode ser reproduzido com `make generate-data` (semente fixa `20261110`).
+Se uma entrada oficial for disponibilizada, ela poderá substituir esse arquivo,
+mantendo uma linha `estatura peso`, separada por espaço.
+
+## Entrada e agrupamento em classes
+
+O módulo C++17 compartilhado `include/dados.hpp` + `src/dados.cpp` lê exatamente
+1000 registros positivos e finitos e constrói os histogramas usados pelas futuras
+versões sequencial e OpenMP. A convenção é única: intervalos semiabertos
+`[limite_inferior, limite_superior)`, alinhados à largura. Assim, um valor na
+fronteira pertence à classe que começa nessa fronteira. As larguras são 8 cm para
+estatura e 4 kg para peso. Cada classe expõe os dois limites, o ponto médio e a
+frequência absoluta.
 
 ```bash
 make check-data
+make generate-data         # recria a entrada sintetica deterministica
+make test-data             # testa leitura, classes e entradas invalidas
 make base
 make openmp
 make run-base

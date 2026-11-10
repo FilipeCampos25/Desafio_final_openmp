@@ -15,6 +15,9 @@ OPENMP_SOURCE := codigos/01_openmp/cv_openmp.cpp
 OPENMP_BINARY := $(BIN_DIR)/openmp/cv_openmp
 DATA          ?= dados/pessoas.txt
 THREADS       ?= 4
+COMMON_SOURCE := src/dados.cpp
+COMMON_HEADER := include/dados.hpp
+DATA_TEST     := $(BIN_DIR)/tests/test_dados
 
 # Compila apenas as implementacoes que ja existirem.
 AVAILABLE_TARGETS :=
@@ -36,16 +39,27 @@ all: $(AVAILABLE_TARGETS)
 base: $(BASE_BINARY)
 openmp: $(OPENMP_BINARY)
 
-$(BASE_BINARY): $(BASE_SOURCE)
+$(BASE_BINARY): $(BASE_SOURCE) $(COMMON_SOURCE) $(COMMON_HEADER)
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -Iinclude -o $@ $(BASE_SOURCE) $(COMMON_SOURCE) $(LDLIBS)
 
-$(OPENMP_BINARY): $(OPENMP_SOURCE)
+$(OPENMP_BINARY): $(OPENMP_SOURCE) $(COMMON_SOURCE) $(COMMON_HEADER)
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -fopenmp -o $@ $< $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -Iinclude -fopenmp -o $@ $(OPENMP_SOURCE) $(COMMON_SOURCE) $(LDLIBS)
 
 check-data:
 	python3 scripts/validar_entrada.py "$(DATA)"
+
+generate-data:
+	python3 scripts/gerar_dados_sinteticos.py "$(DATA)"
+
+$(DATA_TEST): tests/test_dados.cpp $(COMMON_SOURCE) $(COMMON_HEADER)
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -Iinclude -o $@ tests/test_dados.cpp $(COMMON_SOURCE) $(LDLIBS)
+
+test-data: check-data $(DATA_TEST)
+	./$(DATA_TEST)
+	python3 -m unittest tests/test_validar_entrada.py -v
 
 # Convenção de interface para os futuros programas C++:
 # cada executavel recebe o caminho do TXT como primeiro argumento.
@@ -64,13 +78,13 @@ benchmark: check-data base openmp
 
 # Smoke test: valida a entrada e executa ambas as versoes.
 # A comparacao numerica de resultados ainda deve ser implementada.
-test: run-base run-openmp
+test: test-data run-base run-openmp
 
 clean:
 	rm -rf $(BIN_DIR)
 
 help:
-	@printf '%s\n' 'make all | base | openmp | check-data | test | benchmark | clean'
+	@printf '%s\n' 'make all | base | openmp | check-data | generate-data | test-data | test | benchmark | clean'
 	@printf '%s\n' 'Exemplo: make benchmark DATA=dados/pessoas.txt THREADS=4'
 
-.PHONY: all base openmp check-data run-base run-openmp benchmark test clean help
+.PHONY: all base openmp check-data generate-data test-data run-base run-openmp benchmark test clean help
