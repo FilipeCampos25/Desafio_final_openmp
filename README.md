@@ -66,6 +66,8 @@ ausentes. Os comandos previstos são:
 
 ```bash
 make check-data
+make generate-data         # recria a entrada sintetica deterministica
+make test-data             # testa leitura, classes e entradas invalidas
 make base
 make openmp
 make run-base
