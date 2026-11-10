@@ -15,16 +15,12 @@
 .DS_Store
 Thumbs.db
 
-# Python e Jupyter
+# Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.ipynb_checkpoints/
 .venv/
 venv/
-env/
 
 # Compilacao C/C++ e executaveis
 build/
@@ -46,7 +42,6 @@ CMakeCache.txt
 *.gcda
 *.gcno
 *.gcov
-/codigos/**/01_matmul
 
 # Resultados gerados por execucoes e medicoes
 /resultados/*
@@ -60,9 +55,3 @@ CMakeCache.txt
 *.log
 *.tmp
 *.temp
-
-# Artefatos reproduziveis da analise de desempenho (Issue #10)
-!/resultados/analise_manifesto.json
-!/resultados/graficos/
-/resultados/graficos/*
-!/resultados/graficos/*.svg

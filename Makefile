@@ -1,6 +1,4 @@
-# Programacao Paralela (CCO085) - IESB 2026/2
-# Adaptado do Makefile de Multiplicacao_de_matrizes_densas_pp.
-# Desafio final 009: coeficiente de variacao com OpenMP (sem MPI).
+# Desafio final 009: coeficiente de variacao com OpenMP.
 
 .DEFAULT_GOAL := all
 

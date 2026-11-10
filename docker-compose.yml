@@ -1,8 +1,8 @@
 services:
-  pp-lab:
+  desafio-openmp:
     build: .
-    image: iesb/pp-lab:2026.2
-    container_name: pp-lab
+    image: iesb/desafio-final-openmp:2026.2
+    container_name: desafio-final-openmp
     working_dir: /lab
     volumes:
       - .:/lab
