@@ -1,7 +1,7 @@
 {
-  "name": "Programacao Paralela CCO085",
+  "name": "Desafio Final 009 - OpenMP",
   "dockerComposeFile": "../docker-compose.yml",
-  "service": "pp-lab",
+  "service": "desafio-openmp",
   "workspaceFolder": "/lab",
   "customizations": {
     "vscode": {

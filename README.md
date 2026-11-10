@@ -1,33 +1,68 @@
 # Desafio Final 009 — Coeficiente de Variação com OpenMP
 
-Estrutura inicial derivada de [Multiplicacao_de_matrizes_densas_pp](https://github.com/FilipeCampos25/Multiplicacao_de_matrizes_densas_pp), branch `main`, para o enunciado `009_desafio_final_openmp_prof_rodrigo(1).pdf`.
+## Objetivo
 
-## O que foi preservado
+Calcular o coeficiente de variação (CV) da estatura e do peso de 1000 pessoas,
+comparando uma implementação sequencial com uma implementação paralela em
+C++17/OpenMP. As estaturas devem ser agrupadas em classes de 8 cm e os pesos em
+classes de 4 kg.
 
-- `Dockerfile`, `docker-compose.yml`, `.devcontainer/devcontainer.json` e `.gitignore`: copiados sem alteração do repositório de referência.
-- Compilador `g++`; flags `-O2 -std=c++17 -Wall -Wextra -Wpedantic` e `-fopenmp` só para a versão paralela.
-- Diretórios `codigos/baselines_sequenciais_CCO085/`, `codigos/01_openmp/` e binários em `bin/`.
-- `referencia_original/Makefile`: cópia integral do Makefile do projeto de matrizes. O `Makefile` da raiz é adaptado ao exercício de CV, já que o original aponta para multiplicação de matrizes e MPI.
+A especificação principal é o documento
+`009_desafio_final_openmp_prof_rodrigo (1).pdf`, fornecido pelo professor.
 
-## Uso do ambiente
+## Requisitos do professor
 
-Na raiz desta pasta:
+- Ler estatura e peso de 1000 pessoas.
+- Agrupar estaturas em classes de 8 cm e pesos em classes de 4 kg.
+- Calcular média, desvio padrão e coeficiente de variação a partir das classes.
+- Implementar e comparar versões sequencial e paralela com OpenMP.
+- Entregar o código C/C++ completo, os CVs obtidos, a análise de desempenho e
+  um relatório em PDF que explique as partes paralelizadas e as decisões tomadas.
+
+## Estrutura do repositório
+
+```text
+.
+├── .devcontainer/                 configuração do ambiente de desenvolvimento
+├── codigos/
+│   ├── baselines_sequenciais_CCO085/  futura versão sequencial
+│   └── 01_openmp/                     futura versão OpenMP
+├── dados/                         entrada com os 1000 registros
+├── docs/                          relatório final em PDF
+├── resultados/                    CVs e medições documentadas
+├── scripts/                       validação e automação do projeto
+├── CHECKLIST.md                   etapas e entregáveis
+├── Dockerfile
+├── docker-compose.yml
+└── Makefile
+```
+
+## Formato da entrada
+
+O caminho padrão é `dados/pessoas.txt`. O arquivo deve conter exatamente 1000
+linhas, com a estatura em centímetros e o peso em quilogramas separados por
+espaço:
+
+```text
+estatura_cm peso_kg
+```
+
+O conjunto de dados não acompanha esta estrutura inicial. Não use dados
+inventados como se fossem resultados oficiais.
+
+## Configuração e execução
+
+O ambiente fornece `g++`, C++17 e OpenMP. Na raiz do repositório:
 
 ```bash
 docker compose build
-docker compose run --rm pp-lab
-make                         # hoje: avisa fontes ainda pendentes
+docker compose run --rm desafio-openmp
+make
 make help
 ```
 
-Crie os futuros fontes nos caminhos:
-
-- `codigos/baselines_sequenciais_CCO085/cv_sequencial.cpp`
-- `codigos/01_openmp/cv_openmp.cpp`
-
-As versões deverão aceitar como primeiro argumento o caminho do arquivo TXT, por exemplo `dados/pessoas.txt`. Esse contrato é do **projeto inicial**, não do enunciado do professor.
-
-O arquivo **não foi fornecido** no enunciado PDF. Quando você tiver a entrada real de 1000 pessoas, coloque-a em `dados/pessoas.txt` (uma linha: `estatura peso`, separados por espaço).
+Enquanto as implementações estiverem pendentes, `make` apenas informa os fontes
+ausentes. Os comandos previstos são:
 
 ```bash
 make check-data
@@ -35,13 +70,28 @@ make base
 make openmp
 make run-base
 make run-openmp THREADS=4
-make test                  # smoke test; ainda sem comparacao numerica
-make benchmark THREADS=4   # tempos simples; repetir para analise final
+make test
+make benchmark THREADS=4
 make clean
 ```
 
-Atenção: o Compose original usa `container_name: pp-lab`. Se o contêiner do projeto de matrizes estiver ativo, pare-o antes de iniciar este projeto, ou haverá conflito de nomes. O Docker original contém MPI, mas o desafio 009 **não exige MPI**.
+MPI está instalado na imagem da disciplina, mas não é requisito deste desafio e
+não é usado pelo Makefile.
 
-## Entregáveis ainda pendentes
+## Etapas de implementação
 
-Confira `CHECKLIST.md`. A infraestrutura não substitui o código C/C++ com OpenMP, os dois CVs, a análise de tempos e o relatório PDF exigidos na atividade.
+1. Preparar e validar os 1000 registros e definir os limites das classes.
+2. Implementar `codigos/baselines_sequenciais_CCO085/cv_sequencial.cpp`.
+3. Implementar `codigos/01_openmp/cv_openmp.cpp` com OpenMP.
+4. Comparar numericamente as versões e testar diferentes números de threads.
+5. Medir o desempenho nas mesmas condições e documentar os resultados.
+
+## Testes e entregáveis
+
+Os testes devem cobrir entrada inválida, fronteiras das classes, total das
+frequências, fórmulas estatísticas e equivalência numérica entre as versões. A
+medição de desempenho só deve ser executada depois que ambas as implementações
+estiverem corretas.
+
+O andamento está em `CHECKLIST.md`. Nesta etapa inicial, os programas, dados,
+resultados, medições e relatório continuam pendentes.

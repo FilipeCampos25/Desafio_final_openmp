@@ -9,4 +9,4 @@ Referência: **Exercício Final: Análise de Dados com OpenMP**, Prof. Rodrigo. 
 - [ ] **5. Desempenho:** medir tempos sequencial e paralelo **com a mesma entrada**, repetindo execuções, registrar threads/ambiente e analisar ganho ou sobrecarga (mesmo se OpenMP não for mais rápido).
 - [ ] **6. Entrega:** incluir **código-fonte C/C++ com OpenMP**, **CV final de estatura e peso**, **comparação de tempos** e **relatório breve em PDF** explicando as partes paralelizadas e por quê.
 
-> Este ZIP entrega somente a infraestrutura inicial. Os arquivos C++, os dados de 1000 pessoas, os CVs, as medições e o relatório PDF permanecem pendentes nesta etapa.
+> O repositório contém somente a infraestrutura inicial. Os arquivos C++, os dados de 1000 pessoas, os CVs, as medições e o relatório PDF permanecem pendentes nesta etapa.
