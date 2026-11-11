@@ -16,6 +16,7 @@ THREADS       ?= 4
 COMMON_SOURCE := src/dados.cpp
 COMMON_HEADER := include/dados.hpp
 DATA_TEST     := $(BIN_DIR)/tests/test_dados
+CORRECTNESS_TEST := tests/test_corretude.py
 
 # Compila apenas as implementacoes que ja existirem.
 AVAILABLE_TARGETS :=
@@ -74,9 +75,10 @@ benchmark: check-data base openmp
 	@printf '%s\n' "== OpenMP ($(THREADS) threads) =="
 	@OMP_NUM_THREADS=$(THREADS) /usr/bin/time -f 'tempo_real=%e s' ./$(OPENMP_BINARY) "$(DATA)"
 
-# Smoke test: valida a entrada e executa ambas as versoes.
-# A comparacao numerica de resultados ainda deve ser implementada.
-test: test-data run-base run-openmp
+# Teste completo: valida entrada/histogramas e compara estatisticas das versoes
+# sequencial e OpenMP (1, 2 e 4 threads) contra uma referencia independente.
+test: test-data base openmp
+	python3 $(CORRECTNESS_TEST)
 
 clean:
 	rm -rf $(BIN_DIR)
