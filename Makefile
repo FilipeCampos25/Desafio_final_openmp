@@ -13,10 +13,15 @@ OPENMP_SOURCE := codigos/01_openmp/cv_openmp.cpp
 OPENMP_BINARY := $(BIN_DIR)/openmp/cv_openmp
 DATA          ?= dados/pessoas.txt
 THREADS       ?= 4
+BENCHMARK_THREADS ?= 1,2,4
+BENCHMARK_REPETITIONS ?= 30
+BENCHMARK_WARMUPS ?= 3
+PYTHON        ?= python3
 COMMON_SOURCE := src/dados.cpp
 COMMON_HEADER := include/dados.hpp
 DATA_TEST     := $(BIN_DIR)/tests/test_dados
 CORRECTNESS_TEST := tests/test_corretude.py
+BENCHMARK_SCRIPT := scripts/benchmark.py
 
 # Compila apenas as implementacoes que ja existirem.
 AVAILABLE_TARGETS :=
@@ -47,10 +52,10 @@ $(OPENMP_BINARY): $(OPENMP_SOURCE) $(COMMON_SOURCE) $(COMMON_HEADER)
 	$(CXX) $(CXXFLAGS) -Iinclude -fopenmp -o $@ $(OPENMP_SOURCE) $(COMMON_SOURCE) $(LDLIBS)
 
 check-data:
-	python3 scripts/validar_entrada.py "$(DATA)"
+	$(PYTHON) scripts/validar_entrada.py "$(DATA)"
 
 generate-data:
-	python3 scripts/gerar_dados_sinteticos.py "$(DATA)"
+	$(PYTHON) scripts/gerar_dados_sinteticos.py "$(DATA)"
 
 $(DATA_TEST): tests/test_dados.cpp $(COMMON_SOURCE) $(COMMON_HEADER)
 	@mkdir -p $(@D)
@@ -58,7 +63,7 @@ $(DATA_TEST): tests/test_dados.cpp $(COMMON_SOURCE) $(COMMON_HEADER)
 
 test-data: check-data $(DATA_TEST)
 	./$(DATA_TEST)
-	python3 -m unittest tests/test_validar_entrada.py -v
+	$(PYTHON) -m unittest tests/test_validar_entrada.py -v
 
 # Convenção de interface para os futuros programas C++:
 # cada executavel recebe o caminho do TXT como primeiro argumento.
@@ -68,23 +73,25 @@ run-base: check-data base
 run-openmp: check-data openmp
 	OMP_NUM_THREADS=$(THREADS) ./$(OPENMP_BINARY) "$(DATA)"
 
-# Medicao inicial: executar novamente varias vezes antes da analise final.
+# Mede o processo completo com a mesma entrada e salva CSVs reproduziveis.
 benchmark: check-data base openmp
-	@printf '%s\n' "== Sequencial =="
-	@/usr/bin/time -f 'tempo_real=%e s' ./$(BASE_BINARY) "$(DATA)"
-	@printf '%s\n' "== OpenMP ($(THREADS) threads) =="
-	@OMP_NUM_THREADS=$(THREADS) /usr/bin/time -f 'tempo_real=%e s' ./$(OPENMP_BINARY) "$(DATA)"
+	$(PYTHON) $(BENCHMARK_SCRIPT) --data "$(DATA)" \
+		--sequential "$(BASE_BINARY)" --openmp "$(OPENMP_BINARY)" \
+		--threads "$(BENCHMARK_THREADS)" \
+		--repetitions "$(BENCHMARK_REPETITIONS)" \
+		--warmups "$(BENCHMARK_WARMUPS)" --compiler "$(CXX)" \
+		--compiler-flags "$(CXXFLAGS); OpenMP: -fopenmp"
 
 # Teste completo: valida entrada/histogramas e compara estatisticas das versoes
 # sequencial e OpenMP (1, 2 e 4 threads) contra uma referencia independente.
 test: test-data base openmp
-	python3 $(CORRECTNESS_TEST)
+	$(PYTHON) $(CORRECTNESS_TEST)
 
 clean:
 	rm -rf $(BIN_DIR)
 
 help:
 	@printf '%s\n' 'make all | base | openmp | check-data | generate-data | test-data | test | benchmark | clean'
-	@printf '%s\n' 'Exemplo: make benchmark DATA=dados/pessoas.txt THREADS=4'
+	@printf '%s\n' 'Benchmark: make benchmark DATA=dados/pessoas.txt BENCHMARK_REPETITIONS=30 BENCHMARK_THREADS=1,2,4'
 
 .PHONY: all base openmp check-data generate-data test-data run-base run-openmp benchmark test clean help

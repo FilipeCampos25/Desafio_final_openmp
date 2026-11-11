@@ -1,0 +1,23 @@
+timestamp_utc=2026-11-11T01:55:20+00:00
+escopo_tempo=processo completo: criacao, inicializacao, leitura de pessoas.txt, histogramas, calculos e escrita em stdout capturado
+relogio=time.perf_counter_ns() (monotonico, alta resolucao)
+repeticoes_por_configuracao=30
+aquecimentos_nao_registrados_por_configuracao=3
+threads_openmp=1,2,4
+OMP_DYNAMIC=FALSE
+sistema=Windows-10-10.0.26200-SP0
+arquitetura=AMD64
+processador=AMD Ryzen 5 4500 6-Core Processor
+cpus_logicas=12
+python=3.10.11
+compilador=g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r3) 16.2.0
+flags_compilacao=-O2 -std=c++17 -Wall -Wextra -Wpedantic; OpenMP: -fopenmp
+docker=indisponivel no PATH; benchmark fora de Docker
+git_commit=04cb75efb6ac35ecb11ac27e2b1d787b04f0d776
+git_status_antes_dos_resultados=M Makefile
+dados=C:\Users\lipec\Desktop\009_desafio_final_openmp_estrutura_inicial\dados\pessoas.txt
+dados_sha256=16472c57436e244488a67da42d87bf74b4b4f412fa96c3af06e08c4514dc8c6a
+sequencial=C:\Users\lipec\Desktop\009_desafio_final_openmp_estrutura_inicial\bin\base\cv_sequencial.exe
+sequencial_sha256=eb09d2460d3ffcd212d91551db5a8464d8e6cff3be8b750202b376f55722b65d
+openmp=C:\Users\lipec\Desktop\009_desafio_final_openmp_estrutura_inicial\bin\openmp\cv_openmp.exe
+openmp_sha256=54bb42c34ed7a2d13ea0e77d217b6bf2f4979851ccc8f9d43a00cd7a68267cef
