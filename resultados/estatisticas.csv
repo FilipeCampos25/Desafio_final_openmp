@@ -1,0 +1,9 @@
+configuracao,threads,variavel,media_ponderada,desvio_padrao_populacional,cv_percentual
+sequencial,1,estatura,172.608000,15.964408,9.248939
+sequencial,1,peso,82.420000,21.799073,26.448767
+openmp_1_thread,1,estatura,172.608000,15.964408,9.248939
+openmp_1_thread,1,peso,82.420000,21.799073,26.448767
+openmp_2_threads,2,estatura,172.608000,15.964408,9.248939
+openmp_2_threads,2,peso,82.420000,21.799073,26.448767
+openmp_4_threads,4,estatura,172.608000,15.964408,9.248939
+openmp_4_threads,4,peso,82.420000,21.799073,26.448767
